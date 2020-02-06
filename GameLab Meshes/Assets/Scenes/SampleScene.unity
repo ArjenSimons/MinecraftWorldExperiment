@@ -532,8 +532,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSize: {x: 10, y: 10, z: 10}
+  _cellSize: 1
   cube: {fileID: 0}
-  frequency: 100
+  frequency: 8
 --- !u!114 &2012921627
 MonoBehaviour:
   m_ObjectHideFlags: 0
