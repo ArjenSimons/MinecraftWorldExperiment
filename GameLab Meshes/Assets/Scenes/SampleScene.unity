@@ -531,9 +531,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9419065c4ef776b4797b1dc79f6d02e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: {x: 10, y: 10, z: 10}
-  _cellSize: 1
-  frequency: 8
+  mapSize: {x: 60, y: 20, z: 60}
+  cellSize: 1
+  frequency: 8.2
+  amplitude: 20
+  onSettingsChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2012921627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -546,7 +550,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d9eee710e92b84b99e9dc9efa49196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  voxel: {fileID: 2012921626}
 --- !u!23 &2012921628
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -602,7 +605,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2012921625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.9145393, y: 6.9580317, z: -1.2306272}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

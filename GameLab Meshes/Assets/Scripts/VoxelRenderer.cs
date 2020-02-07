@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(VoxelSystem))]
 public class VoxelRenderer : MonoBehaviour
 {
-    [SerializeField] private VoxelSystem voxel;
+    private VoxelSystem voxel;
 
     private Mesh mesh;
     private List<Vector3> vertices;
@@ -17,18 +17,19 @@ public class VoxelRenderer : MonoBehaviour
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
+        voxel = GetComponent<VoxelSystem>();
+        voxel.onSettingsChanged.AddListener(GenerateVoxelMesh);
     }
 
     private void Start()
     {
         GenerateVoxelMesh();
-
-        adjustedScale = voxel.CellSize / 2;
-        Debug.Log(adjustedScale);
     }
 
     private void GenerateVoxelMesh()
     {
+        adjustedScale = voxel.CellSize / 2;
+
         vertices = new List<Vector3>();
         triangles = new List<int>();
 
@@ -38,12 +39,10 @@ public class VoxelRenderer : MonoBehaviour
             {
                 for (int y = 0; y < voxel.Height; y++)
                 {
-                    Debug.Log(voxel.GetCell(x, y, z));
                     if (voxel.GetCell(x, y, z) == 0)
-                        continue;
+                        continue;   
                     //Debug.Log("x: " + x + "y: " + y + "z: " + z);
                     MakeCube(new Vector3Int(x, y, z));
-                    
                 }
             }
         }
@@ -75,7 +74,6 @@ public class VoxelRenderer : MonoBehaviour
 
     private Vector3[] GetFaceVertices(int dir, Vector3 position)
     {
-        adjustedScale = voxel.CellSize / 2;
         Vector3[] faceVertices =
         {
             normalizedVertices[(int)quads[dir].x] * adjustedScale + position * voxel.CellSize,
@@ -103,8 +101,8 @@ public class VoxelRenderer : MonoBehaviour
     {
         new Vector4(3, 2, 7, 6),    //Up
         new Vector4(5, 4, 1, 0),    //Down
-        new Vector4(5, 4, 7, 6),    //North
-        new Vector4(0, 1, 2, 3),    //South
+        new Vector4(1, 0, 3, 2),    //North
+        new Vector4(4, 5, 6, 7),    //South
         new Vector4(5, 1, 7, 3),    //East
         new Vector4(0, 4, 2, 6)     //West
     };

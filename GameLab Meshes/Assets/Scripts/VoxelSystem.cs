@@ -1,19 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class VoxelSystem : MonoBehaviour
 {
     [SerializeField] private Vector3Int mapSize;
-    [SerializeField] private float _cellSize;
+    [SerializeField] private float cellSize = 1;
    
     [SerializeField] [Range(2, 20)] private float frequency = 8;
+    [SerializeField] private int amplitude;
     private byte[,,] map;
+
+    public UnityEvent onSettingsChanged = new UnityEvent();
 
     public int Width => mapSize.x;
     public int Depth => mapSize.z;
     public int Height => mapSize.y;
-    public float CellSize => _cellSize;
+    public float CellSize => cellSize;
 
     public byte GetCell(int x, int y, int z)
     {
@@ -24,7 +29,7 @@ public class VoxelSystem : MonoBehaviour
     {
         Vector3Int dirOffset = directionOffsets[(int)dir];
 
-        Vector3Int neighborPos = new Vector3Int(x + dirOffset.x, y + dirOffset.y, z + dirOffset.z);
+        Vector3Int neighborPos = new Vector3Int(x, y, z) + dirOffset;
 
         if (CellIsInMap(neighborPos))
             return GetCell(neighborPos.x, neighborPos.y, neighborPos.z);
@@ -75,11 +80,16 @@ public class VoxelSystem : MonoBehaviour
     {
         map = new byte[mapSize.x, mapSize.y, mapSize.z];
 
+        if (amplitude > mapSize.y)
+        {
+            amplitude = mapSize.y;
+        }
+
         for (int x = 0; x < mapSize.x; x++)
         {
             for (int z = 0; z < mapSize.z; z++)
             {
-                int height = Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) * mapSize.y);
+                int height = (mapSize.y - (amplitude - 1)) + Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) * mapSize.y);
 
                 for (int y = 0; y < mapSize.y; y++)
                 {
@@ -91,6 +101,11 @@ public class VoxelSystem : MonoBehaviour
                 }
             }
         }
+    }
 
+    private void OnValidate()
+    {
+        InitMap();
+        onSettingsChanged.Invoke();
     }
 }
