@@ -6,7 +6,6 @@ public class VoxelSystem : MonoBehaviour
 {
     [SerializeField] private Vector3Int mapSize;
     [SerializeField] private float _cellSize;
-    //[SerializeField] private GameObject cube;
    
     [SerializeField] [Range(2, 20)] private float frequency = 8;
     private byte[,,] map;
@@ -27,10 +26,10 @@ public class VoxelSystem : MonoBehaviour
 
         Vector3Int neighborPos = new Vector3Int(x + dirOffset.x, y + dirOffset.y, z + dirOffset.z);
 
-        if (!CellIsInMap(neighborPos))
-            return 1;
+        if (CellIsInMap(neighborPos))
+            return GetCell(neighborPos.x, neighborPos.y, neighborPos.z);
 
-        return GetCell(neighborPos.x, neighborPos.y, neighborPos.z);
+        return 0;
     }
 
     private bool CellIsInMap(Vector3Int position)
@@ -70,8 +69,6 @@ public class VoxelSystem : MonoBehaviour
     private void Awake()
     {
         InitMap();
-
-
     }
 
     private void InitMap()
@@ -83,7 +80,7 @@ public class VoxelSystem : MonoBehaviour
             for (int z = 0; z < mapSize.z; z++)
             {
                 int height = Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) * mapSize.y);
-                Debug.Log(height);
+
                 for (int y = 0; y < mapSize.y; y++)
                 {
                     byte byteCode = 0;
@@ -91,11 +88,6 @@ public class VoxelSystem : MonoBehaviour
                         byteCode = 1;
 
                     map[x, y, z] = byteCode;
-
-                    if (byteCode == 1)
-                    {
-                      //  Instantiate(cube, new Vector3(x, y, z), Quaternion.identity, transform);
-                    }
                 }
             }
         }
