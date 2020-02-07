@@ -83,7 +83,7 @@ public class VoxelSystem : MonoBehaviour
             for (int z = 0; z < mapSize.z; z++)
             {
                 int height = Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) * mapSize.y);
-
+                Debug.Log(height);
                 for (int y = 0; y < mapSize.y; y++)
                 {
                     byte byteCode = 0;

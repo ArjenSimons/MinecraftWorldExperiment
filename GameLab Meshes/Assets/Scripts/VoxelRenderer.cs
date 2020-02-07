@@ -26,7 +26,18 @@ public class VoxelRenderer : MonoBehaviour
         adjustedScale = voxel.CellSize / 2;
         Debug.Log(adjustedScale);
 
+        Quaternion rotationOffset = Quaternion.Euler(0, 0, 180);
+
+        Matrix4x4 rotation = Matrix4x4.Rotate(Quaternion.Euler(0, 0, 90));
+
+        Debug.Log(rotation.ToString());
+
+        Vector3 vertexPos = rotationOffset * (new Vector3(10 - adjustedScale, 10 - adjustedScale, 10 - adjustedScale) - new Vector3(10, 10, 10)) + new Vector3(10, 10, 10);
+        //Vector3 vertexPos = rotationOffset * (new Vector3(10 - adjustedScale, 10 - adjustedScale, 10 - adjustedScale) - new Vector3(10, 10, 10)) + new Vector3(10, 10, 10);
+        Debug.Log(vertexPos.ToString());
+
         //Vector3 pos = new Vector3(1, 0, 0) * 0.5f;
+        //Vector3 pos =  Quaternion.Euler(90, 0, 00) * Vector3.up;
 
         //pos = new Vector3(pos.x + -1, pos.y + 1, pos.z);
 
@@ -84,41 +95,81 @@ public class VoxelRenderer : MonoBehaviour
 
     private Vector3[] GetFaceVertices(int dir, Vector3Int position)
     {
-        adjustedScale = 0.5f;
-        Vector3 facePosition = (Vector3)voxel.directionOffsets[dir] * adjustedScale;
-        //Debug.Log(facePosition.ToString());
-
-        facePosition = new Vector3(facePosition.x + position.x, facePosition.y + position.y, facePosition.z + position.z);
-        //  Debug.Log(position.ToString());
-        //Debug.Log(adjustedScale);
         Vector3[] faceVertices =
         {
-            //Bottom Left
-            new Vector3(
-                facePosition.x - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
-                facePosition.y - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
-                facePosition.z - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z)),
-
-            //BottomRight
-            new Vector3(
-                facePosition.x + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
-                facePosition.y - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
-                facePosition.z + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z)),
-
-            //TopLeft
-            new Vector3(
-                facePosition.x - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
-                facePosition.y + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
-                facePosition.z - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z)),
-
-            //TopRight
-            new Vector3(
-                facePosition.x + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
-                facePosition.y + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
-                facePosition.z + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z))
+            normalizedVertices[(int)quads[dir].x],
+            normalizedVertices[(int)quads[dir].y],
+            normalizedVertices[(int)quads[dir].z],
+            normalizedVertices[(int)quads[dir].w]
         };
+        //Vector3 direction = (Vector3)voxel.directionOffsets[dir];
+        //adjustedScale = 0.5f;
+        //Vector3 facePosition = (Vector3)voxel.directionOffsets[dir] * adjustedScale;
+        ////Debug.Log(facePosition.ToString());
+
+        //facePosition = new Vector3(facePosition.x + position.x, facePosition.y + position.y, facePosition.z + position.z);
+        ////Debug.Log(position.ToString());
+        ////Debug.Log(adjustedScale);
+        //Quaternion rotationOffset =  Quaternion.Euler(direction.x * 90, direction.y * 90, direction.z * 90);
+        //Vector3[] faceVertices =
+        //{
+        //    rotationOffset * (direction - new Vector3(position.x - adjustedScale, position.y- adjustedScale, position.z)) + direction
+        //    //rotationOffset * new Vector3(position.x - adjustedScale, position.y - adjustedScale, -adjustedScale),
+        //    //rotationOffset * new Vector3(position.x + adjustedScale, position.y - adjustedScale, -adjustedScale),
+        //    //rotationOffset * new Vector3(position.x - adjustedScale, position.y + adjustedScale, -adjustedScale),
+        //    //rotationOffset * new Vector3(position.x + adjustedScale, position.y + adjustedScale, -adjustedScale)
+        //};
+        //Vector3[] faceVertices =
+        //{
+        //    //Bottom Left
+        //    new Vector3(
+        //        facePosition.x - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
+        //        facePosition.y - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
+        //        facePosition.z - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z)),
+
+        //    //BottomRight
+        //    new Vector3(
+        //        facePosition.x + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
+        //        facePosition.y - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
+        //        facePosition.z + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z)),
+
+        //    //TopLeft
+        //    new Vector3(
+        //        facePosition.x - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
+        //        facePosition.y + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
+        //        facePosition.z - adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z)),
+
+        //    //TopRight
+        //    new Vector3(
+        //        facePosition.x + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].x),
+        //        facePosition.y + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].y),
+        //        facePosition.z + adjustedScale * DirectionMultiplyAdjuster(voxel.directionOffsets[dir].z))
+        //};
         return faceVertices;        
     }
+
+    private readonly Vector3[] normalizedVertices =
+    {
+        new Vector3(-1, -1, 1),
+        new Vector3(1, -1, 1),
+        new Vector3(-1, 1, 1),
+        new Vector3(1, 1, 1),
+        new Vector3(-1, -1, -1),
+        new Vector3(1, -1, -1),
+        new Vector3(-1, 1, -1),
+        new Vector3(1, 1, -1)
+    };
+
+
+    private readonly Vector4[] quads = ///1!!!!!!!!!!!!!!! Check order (face drawn direction)
+    {
+        new Vector4(2, 3, 6, 7),    //Up
+        new Vector4(4, 5, 0, 1),    //Down
+        new Vector4(6, 7, 4, 5),    //North
+        new Vector4(0, 1, 2, 3),    //South
+        new Vector4(1, 5, 3, 7),    //East
+        new Vector4(4, 0, 6, 2)     //West
+    };
 
     private void SetMesh()
     {

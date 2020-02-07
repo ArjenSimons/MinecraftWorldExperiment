@@ -533,7 +533,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapSize: {x: 10, y: 10, z: 10}
   _cellSize: 1
-  cube: {fileID: 0}
   frequency: 8
 --- !u!114 &2012921627
 MonoBehaviour:
@@ -566,7 +565,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: ca364c321bc48994ca0801ce957264d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
