@@ -531,7 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9419065c4ef776b4797b1dc79f6d02e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: {x: 60, y: 20, z: 60}
+  mapSize: {x: 50, y: 20, z: 50}
   cellSize: 1
   frequency: 8.2
   amplitude: 20

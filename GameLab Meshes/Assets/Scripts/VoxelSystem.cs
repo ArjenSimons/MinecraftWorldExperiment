@@ -71,6 +71,14 @@ public class VoxelSystem : MonoBehaviour
         WEST    // -x
     }
 
+    public enum Block
+    {
+        AIR,
+        GRASS,
+        DIRT,
+        STONE
+    }
+
     private void Awake()
     {
         InitMap();
@@ -89,13 +97,17 @@ public class VoxelSystem : MonoBehaviour
         {
             for (int z = 0; z < mapSize.z; z++)
             {
-                int height = (mapSize.y - (amplitude - 1)) + Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) * mapSize.y);
+                int height = (mapSize.y - (amplitude - 1)) + Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) * amplitude);
 
                 for (int y = 0; y < mapSize.y; y++)
                 {
-                    byte byteCode = 0;
-                    if (y < height)
-                        byteCode = 1;
+                    byte byteCode = (int)Block.AIR;
+                    if (y < height - 5)
+                        byteCode = (int)Block.STONE;
+                    else if (y < height - 1)
+                        byteCode = (int)Block.DIRT;
+                    else if (y < height)
+                        byteCode = (int)Block.GRASS;
 
                     map[x, y, z] = byteCode;
                 }

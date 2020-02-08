@@ -11,6 +11,9 @@ public class VoxelRenderer : MonoBehaviour
     private Mesh mesh;
     private List<Vector3> vertices;
     private List<int> triangles;
+    private List<Vector2> uv;
+
+    private VoxelSystem.Block currentBlockType;
 
     private float adjustedScale;
 
@@ -32,6 +35,7 @@ public class VoxelRenderer : MonoBehaviour
 
         vertices = new List<Vector3>();
         triangles = new List<int>();
+        uv = new List<Vector2>();
 
         for (int x = 0; x < voxel.Width; x++)
         {
@@ -39,7 +43,9 @@ public class VoxelRenderer : MonoBehaviour
             {
                 for (int y = 0; y < voxel.Height; y++)
                 {
-                    if (voxel.GetCell(x, y, z) == 0)
+                    currentBlockType = (VoxelSystem.Block)voxel.GetCell(x, y, z);
+                    Debug.Log(voxel.GetCell(x, y, z));
+                    if (currentBlockType == VoxelSystem.Block.AIR)
                         continue;   
                     //Debug.Log("x: " + x + "y: " + y + "z: " + z);
                     MakeCube(new Vector3Int(x, y, z));
@@ -70,6 +76,8 @@ public class VoxelRenderer : MonoBehaviour
         triangles.Add(nVertices + 2);
         triangles.Add(nVertices + 3);
         triangles.Add(nVertices + 1);
+
+        MapUV(dir);
     }
 
     private Vector3[] GetFaceVertices(int dir, Vector3 position)
@@ -81,7 +89,44 @@ public class VoxelRenderer : MonoBehaviour
             normalizedVertices[(int)quads[dir].z] * adjustedScale + position * voxel.CellSize,
             normalizedVertices[(int)quads[dir].w] * adjustedScale + position * voxel.CellSize
         };
+
         return faceVertices;        
+    }
+
+    private void MapUV(int dir)
+    {
+        switch (currentBlockType)
+        {
+            case (VoxelSystem.Block.GRASS):
+                if (dir == 0)
+                {
+                    uv.Add(new Vector2(0.5f, 0.5f));
+                    uv.Add(new Vector2(1, 0.5f));
+                    uv.Add(new Vector2(0.5f, 1));
+                    uv.Add(new Vector2(1, 1));
+                }
+                else
+                {
+                    uv.Add(new Vector2(0, 0.5f));
+                    uv.Add(new Vector2(0.5f, 0.5f));
+                    uv.Add(new Vector2(0, 1));
+                    uv.Add(new Vector2(0.5f, 1));
+                }
+                break;
+            case (VoxelSystem.Block.DIRT):
+                uv.Add(new Vector2(0, 0));
+                uv.Add(new Vector2(0.5f, 0));
+                uv.Add(new Vector2(0, 0.5f));
+                uv.Add(new Vector2(0.5f, 0.5f));
+                break;
+            case (VoxelSystem.Block.STONE):
+                uv.Add(new Vector2(0.5f, 0));
+                uv.Add(new Vector2(1, 0));
+                uv.Add(new Vector2(0.5f, 0.5f));
+                uv.Add(new Vector2(1, 0.5f));
+                break;
+        }
+        
     }
 
     private readonly Vector3[] normalizedVertices =
@@ -111,6 +156,7 @@ public class VoxelRenderer : MonoBehaviour
     {
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
+        mesh.uv = uv.ToArray();
 
         mesh.RecalculateNormals();
     }
