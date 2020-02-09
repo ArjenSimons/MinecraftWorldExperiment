@@ -34,7 +34,7 @@ public class VoxelSystem : MonoBehaviour
         if (CellIsInMap(neighborPos))
             return GetCell(neighborPos.x, neighborPos.y, neighborPos.z);
 
-        return 0;
+        return 0; //Corresponds to 'air'
     }
 
     private bool CellIsInMap(Vector3Int position)
@@ -97,7 +97,9 @@ public class VoxelSystem : MonoBehaviour
         {
             for (int z = 0; z < mapSize.z; z++)
             {
-                int height = (mapSize.y - (amplitude - 1)) + Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) * amplitude);
+                int height = (mapSize.y - (amplitude - 1)) + 
+                    Mathf.RoundToInt(Mathf.PerlinNoise(x / frequency, z / frequency) 
+                    * amplitude);
 
                 for (int y = 0; y < mapSize.y; y++)
                 {
