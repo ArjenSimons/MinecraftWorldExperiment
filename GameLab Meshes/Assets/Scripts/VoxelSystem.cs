@@ -13,7 +13,7 @@ public class VoxelSystem : MonoBehaviour
     [SerializeField] private int amplitude;
     private byte[,,] map;
 
-    public UnityEvent onSettingsChanged = new UnityEvent();
+    [HideInInspector] public UnityEvent onSettingsChanged = new UnityEvent();
 
     public int Width => mapSize.x;
     public int Depth => mapSize.z;

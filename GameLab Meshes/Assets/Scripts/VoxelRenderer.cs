@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,28 +19,26 @@ public class VoxelRenderer : MonoBehaviour
     private VoxelSystem.Block currentBlockType;
 
     private float adjustedScale;
-    private bool isChanging;
 
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
         voxel = GetComponent<VoxelSystem>();
-        voxel.onSettingsChanged.AddListener(() => StartCoroutine(GenerateVoxelMesh()));
+        voxel.onSettingsChanged.AddListener(GenerateVoxelMesh);
     }
 
     private void Start()
     {
         stopwatch.Start();
-        StartCoroutine(GenerateVoxelMesh());
+        GenerateVoxelMesh();
         stopwatch.Stop();
 
         UnityEngine.Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
     }
 
-    private IEnumerator GenerateVoxelMesh()
+    private void GenerateVoxelMesh()
     {
-        UnityEngine.Debug.Log(isChanging);
-        yield return new WaitUntil(() => !isChanging);
+        mesh.Clear();
         adjustedScale = voxel.CellSize / 2;
 
         vertices = new List<Vector3>();
@@ -64,7 +62,6 @@ public class VoxelRenderer : MonoBehaviour
         }
 
         SetMesh();
-        isChanging = false;
     }
 
     private void MakeCube(Vector3Int position)
@@ -95,10 +92,18 @@ public class VoxelRenderer : MonoBehaviour
     {
         Vector3[] faceVertices =
         {
-            normalizedVertices[(int)quads[dir].x] * adjustedScale + position * voxel.CellSize,
-            normalizedVertices[(int)quads[dir].y] * adjustedScale + position * voxel.CellSize,
-            normalizedVertices[(int)quads[dir].z] * adjustedScale + position * voxel.CellSize,
-            normalizedVertices[(int)quads[dir].w] * adjustedScale + position * voxel.CellSize
+            normalizedVertices[(int)quads[dir].x] 
+            * adjustedScale + position 
+            * voxel.CellSize,
+            normalizedVertices[(int)quads[dir].y] 
+            * adjustedScale + position 
+            * voxel.CellSize,
+            normalizedVertices[(int)quads[dir].z] 
+            * adjustedScale + position 
+            * voxel.CellSize,
+            normalizedVertices[(int)quads[dir].w] 
+            * adjustedScale + position 
+            * voxel.CellSize
         };
 
         return faceVertices;        
@@ -109,7 +114,7 @@ public class VoxelRenderer : MonoBehaviour
         switch (currentBlockType)
         {
             case (VoxelSystem.Block.GRASS):
-                if (dir == 0)
+                if (dir == 0) //If on top
                 {
                     uv.Add(new Vector2(0.5f, 0.5f));
                     uv.Add(new Vector2(1, 0.5f));
@@ -137,7 +142,6 @@ public class VoxelRenderer : MonoBehaviour
                 uv.Add(new Vector2(1, 0.5f));
                 break;
         }
-        
     }
 
     private readonly Vector3[] normalizedVertices =
