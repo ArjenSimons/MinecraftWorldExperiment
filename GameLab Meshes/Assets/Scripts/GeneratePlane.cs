@@ -39,8 +39,6 @@ public class GeneratePlane : GenerateMesh
                 triangles[triangle] = vertex;
                 triangles[1 + triangle] = vertex + gridSize.x;
                 triangles[2 + triangle] = vertex + 1;
-
-
                 triangles[3 + triangle] = vertex + 1;
                 triangles[4 + triangle] = vertex + gridSize.x;
                 triangles[5 + triangle] = vertex + gridSize.x + 1;

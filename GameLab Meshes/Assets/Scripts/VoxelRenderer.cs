@@ -2,10 +2,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(VoxelSystem))]
 public class VoxelRenderer : MonoBehaviour
 {
+    Stopwatch stopwatch = new Stopwatch();
+
     private VoxelSystem voxel;
 
     private Mesh mesh;
@@ -16,21 +19,28 @@ public class VoxelRenderer : MonoBehaviour
     private VoxelSystem.Block currentBlockType;
 
     private float adjustedScale;
+    private bool isChanging;
 
     private void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
         voxel = GetComponent<VoxelSystem>();
-        voxel.onSettingsChanged.AddListener(GenerateVoxelMesh);
+        voxel.onSettingsChanged.AddListener(() => StartCoroutine(GenerateVoxelMesh()));
     }
 
     private void Start()
     {
-        GenerateVoxelMesh();
+        stopwatch.Start();
+        StartCoroutine(GenerateVoxelMesh());
+        stopwatch.Stop();
+
+        UnityEngine.Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
     }
 
-    private void GenerateVoxelMesh()
+    private IEnumerator GenerateVoxelMesh()
     {
+        UnityEngine.Debug.Log(isChanging);
+        yield return new WaitUntil(() => !isChanging);
         adjustedScale = voxel.CellSize / 2;
 
         vertices = new List<Vector3>();
@@ -44,16 +54,17 @@ public class VoxelRenderer : MonoBehaviour
                 for (int y = 0; y < voxel.Height; y++)
                 {
                     currentBlockType = (VoxelSystem.Block)voxel.GetCell(x, y, z);
-                    Debug.Log(voxel.GetCell(x, y, z));
+
                     if (currentBlockType == VoxelSystem.Block.AIR)
-                        continue;   
-                    //Debug.Log("x: " + x + "y: " + y + "z: " + z);
+                        continue;
+
                     MakeCube(new Vector3Int(x, y, z));
                 }
             }
         }
 
         SetMesh();
+        isChanging = false;
     }
 
     private void MakeCube(Vector3Int position)
