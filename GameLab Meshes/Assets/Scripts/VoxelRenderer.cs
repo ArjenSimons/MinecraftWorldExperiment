@@ -38,7 +38,6 @@ public class VoxelRenderer : MonoBehaviour
 
     private void GenerateVoxelMesh()
     {
-        mesh.Clear();
         adjustedScale = voxel.CellSize / 2;
 
         vertices = new List<Vector3>();
@@ -169,10 +168,12 @@ public class VoxelRenderer : MonoBehaviour
 
     private void SetMesh()
     {
+        mesh.Clear();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uv.ToArray();
 
+        mesh.Optimize();
         mesh.RecalculateNormals();
     }
 }
