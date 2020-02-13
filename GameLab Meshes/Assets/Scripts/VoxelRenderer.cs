@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(VoxelSystem))]
 public class VoxelRenderer : MonoBehaviour
@@ -76,7 +77,6 @@ public class VoxelRenderer : MonoBehaviour
     {
         int nVertices = vertices.Count;
         vertices.AddRange(GetFaceVertices(dir, position));
-
         triangles.Add(nVertices);
         triangles.Add(nVertices + 2);
         triangles.Add(nVertices + 1);
@@ -169,6 +169,7 @@ public class VoxelRenderer : MonoBehaviour
     private void SetMesh()
     {
         mesh.Clear();
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.uv = uv.ToArray();

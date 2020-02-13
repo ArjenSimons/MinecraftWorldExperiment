@@ -9,7 +9,7 @@ public class VoxelSystem : MonoBehaviour
     [SerializeField] private Vector3Int mapSize;
     [SerializeField] private float cellSize = 1;
    
-    [SerializeField] [Range(2, 20)] private float frequency = 8;
+    [SerializeField] [Range(2, 50)] private float frequency = 8;
     [SerializeField] private int amplitude;
     private byte[,,] map;
 
