@@ -7,41 +7,52 @@ public class PostProcessingRipple : MonoBehaviour
 {
     [SerializeField] Material postProcessingMat;
     [SerializeField] float rippleSpeed = 1;
+    Camera cam;
     private Renderer rend;
 
-    private float rippleDistance = 0.1f;
-    private bool rippleActive;
+    public Transform scanOrigin;
+    private float scanDistance = 5;
+    private bool isScanning;
 
-    private void Start()
+    private void OnEnable()
     {
-        Camera cam = GetComponent<Camera>();
+        cam = GetComponent<Camera>();
         cam.depthTextureMode = cam.depthTextureMode | DepthTextureMode.Depth;
-        rend = GetComponent<Renderer>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && rippleActive == false)
+        if (Input.GetKey(KeyCode.Space))
         {
-            rippleActive = true;
+            //Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            //RaycastHit hit;
+            //Debug.Log("click");
+            //if (Physics.Raycast(ray, out hit))
+            //{
+               // Debug.Log(hit);
+                isScanning = true;
+                scanDistance = 5;
+                //scanOrigin = hit.point;
+            //}
+           // scanOrigin = cam.transform.position;
         }
 
-        if (rippleActive)
+        if (isScanning)
         {
-            rippleDistance += rippleSpeed * Time.deltaTime;
+            scanDistance += rippleSpeed * Time.deltaTime;
 
-            if (rippleDistance > 500)
+            if (scanDistance > 500)
             { 
-                rippleActive = false;
-                rippleDistance = 0.1f;
+                isScanning = false;
+                scanDistance = 5;
             }
-            Debug.Log(rippleDistance);
-            postProcessingMat.SetFloat("_WaveDistance", rippleDistance);
         }
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
+        postProcessingMat.SetVector("_WorldSpaceScannerPos", scanOrigin.position);
+        postProcessingMat.SetFloat("_WaveDistance", scanDistance);
         Graphics.Blit(source, destination, postProcessingMat);
     }
 }
